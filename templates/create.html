@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Blog - Microblog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-5">
+                <h2 class="mb-4 fw-bold">Create New Blog</h2>
+                <form method="POST" action="/create" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="title" class="form-label text-muted small fw-bold">TITLE</label>
+                        <input type="text" class="form-control form-control-lg" id="title" name="title"
+                            placeholder="Enter a catchy title" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="image" class="form-label text-muted small fw-bold">COVER IMAGE (OPTIONAL)</label>
+                        <input type="file" class="form-control mb-2" id="image" name="image" accept="image/*"
+                            onchange="previewImage(this, 'preview-image')">
+                        <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded shadow-sm d-none"
+                            style="max-height: 300px; object-fit: cover;">
+                    </div>
+
+                    <script>
+                        function previewImage(input, previewId) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+                                reader.onload = function (e) {
+                                    var preview = document.getElementById(previewId);
+                                    preview.src = e.target.result;
+                                    preview.classList.remove('d-none');
+                                }
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+                    </script>
+                    <div class="mb-4">
+                        <label for="category" class="form-label text-muted small fw-bold">CATEGORY</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="form-label text-muted small fw-bold">CONTENT</label>
+                        <textarea class="form-control" id="description" name="description" rows="10"
+                            placeholder="Share your story..." required></textarea>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="/" class="btn btn-light px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">Publish Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

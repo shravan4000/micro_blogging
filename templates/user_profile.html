@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.username }}'s Profile - Microblog{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm text-center p-4">
+            <div class="mb-3">
+                <img src="{{ url_for('static', filename='uploads/' + user.profile_image) }}"
+                    class="rounded-circle img-thumbnail" alt="{{ user.username }}"
+                    style="width: 150px; height: 150px; object-fit: cover;">
+            </div>
+            <h3 class="fw-bold mb-1">{{ user.username }}</h3>
+            <p class="text-muted mb-3">Posts: {{ blogs|length }}</p>
+
+            {% if user.bio %}
+            <div class="card-text text-start px-3 mb-3">
+                <h6 class="fw-bold text-uppercase small text-muted">About</h6>
+                <p>{{ user.bio }}</p>
+            </div>
+            {% endif %}
+
+            {% if session.get('user_id') == user.id %}
+            <a href="{{ url_for('edit_profile') }}" class="btn btn-outline-primary w-100">Edit Profile</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h3 class="mb-4 pb-2 border-bottom">Recent Posts by {{ user.username }}</h3>
+
+        {% if blogs %}
+        <div class="row">
+            {% for blog in blogs %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        {% if blog.image_file and blog.image_file != 'default.jpg' %}
+                        <div class="mb-3">
+                            <img src="{{ url_for('static', filename='uploads/' + blog.image_file) }}"
+                                class="card-img-top rounded mb-2" alt="{{ blog.title }}"
+                                style="height: 150px; object-fit: cover;">
+                        </div>
+                        {% endif %}
+                        <h5 class="card-title fw-bold">
+                            <a href="{{ url_for('blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{
+                                blog.title }}</a>
+                        </h5>
+                        <p class="card-text text-muted small">{{ blog.description | markdown | striptags | truncate(80)
+                            }}</p>
+                        <p class="card-text"><small class="text-muted">{{ blog.created_at.strftime('%Y-%m-%d')
+                                }}</small></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-light text-center py-5">
+            <p class="lead text-muted mb-0">No posts yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Microblog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg mt-5">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4 fw-bold">Welcome Back</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label text-muted small fw-bold">USERNAME</label>
+                        <input type="text" class="form-control form-control-lg" id="username" name="username" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label text-muted small fw-bold">PASSWORD</label>
+                        <input type="password" class="form-control form-control-lg" id="password" name="password"
+                            required>
+                    </div>
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    </div>
+                    <p class="text-center text-muted">
+                        Don't have an account? <a href="/register" class="text-decoration-none fw-bold">Register</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}My Blogs - Microblog{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold">My Blogs</h1>
+    <a href="/create" class="btn btn-primary mt-3">Write New Post</a>
+</div>
+
+<div class="row">
+    {% for blog in blogs %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0">
+            <div class="card-body">
+                {% if blog.image_file and blog.image_file != 'default.jpg' %}
+                <div class="mb-3">
+                    <img src="{{ url_for('static', filename='uploads/' + blog.image_file) }}"
+                        class="card-img-top rounded mb-2" alt="{{ blog.title }}"
+                        style="height: 200px; object-fit: cover;">
+                </div>
+                {% endif %}
+                <h5 class="card-title fw-bold">
+                    <a href="{{ url_for('blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{
+                        blog.title }}</a>
+                </h5>
+                <p class="card-text text-muted">{{ blog.description | markdown | striptags | truncate(100) }}</p>
+
+                <div class="mt-4 pt-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <small class="text-muted">{{ blog.created_at.strftime('%Y-%m-%d') }}</small>
+                        <small class="text-primary fw-bold">{{ blog.views }} views</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('edit_blog', blog_id=blog.id) }}"
+                            class="btn btn-warning btn-sm rounded-pill">Edit</a>
+                        <form action="{{ url_for('delete_blog', blog_id=blog.id) }}" method="POST" class="d-block"
+                            onsubmit="return confirm('Are you sure you want to delete this blog?');">
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill w-100">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5">
+        <h3 class="text-muted">You haven't posted anything yet.</h3>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

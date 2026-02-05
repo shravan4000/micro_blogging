@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Microblog{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-white">Welcome to Microblog</h1>
+    <p class="lead text-white-50">Share your thoughts with the world</p>
+</div>
+
+<h2 class="mb-4">Recent Posts</h2>
+<div class="row">
+    {% for blog in blogs.items %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0">
+            <div class="card-body">
+                {% if blog.image_file and blog.image_file != 'default.jpg' %}
+                <div class="mb-3">
+                    <img src="{{ url_for('static', filename='uploads/' + blog.image_file) }}"
+                        class="card-img-top rounded mb-2" alt="{{ blog.title }}"
+                        style="height: 200px; object-fit: cover;">
+                </div>
+                {% endif %}
+                <h5 class="card-title fw-bold">
+                    <a href="{{ url_for('blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{
+                        blog.title }}</a>
+                </h5>
+                <p class="card-text text-muted">{{ blog.description | markdown | striptags | truncate(100) }}</p>
+                <div class="mb-2">
+                    {% if blog.category %}
+                    <a href="{{ url_for('blogs', category=blog.category.id) }}"
+                        class="badge bg-secondary text-decoration-none">{{ blog.category.name }}</a>
+                    {% endif %}
+                </div>
+                <div class="mt-auto">
+                    <p class="card-text mb-1">
+                        <small class="text-muted">
+                            By <a href="{{ url_for('user_profile', username=blog.author.username) }}"
+                                class="text-decoration-none text-muted fw-bold">{{ blog.author.username }}</a>
+                            &bull; {{ blog.created_at.strftime('%Y-%m-%d') }}
+                        </small>
+                    </p>
+                    <p class="card-text"><small class="text-primary fw-bold">{{ blog.views }} views &bull; {{
+                            blog.comments|length }} comments</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if blogs.has_prev %}
+        <li class="page-item">
+            <a class="page-link shadow-sm" href="{{ url_for('home', page=blogs.prev_num) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link shadow-sm">&laquo;</span>
+        </li>
+        {% endif %}
+        {% for page_num in blogs.iter_pages() %}
+        {% if page_num %}
+        {% if page_num == blogs.page %}
+        <li class="page-item active"><span class="page-link shadow-sm">{{ page_num }}</span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link shadow-sm" href="{{ url_for('home', page=page_num) }}">{{ page_num
+                }}</a></li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled"><span class="page-link shadow-sm">...</span></li>
+        {% endif %}
+        {% endfor %}
+        {% if blogs.has_next %}
+        <li class="page-item">
+            <a class="page-link shadow-sm" href="{{ url_for('home', page=blogs.next_num) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link shadow-sm">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock %}
