@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Flask
+instance/
+.webassets-cache
+.env
+walkthrough.md
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# User Uploads (Keep directory but ignore files)
+static/uploads/*
+!static/uploads/.gitkeep
+!static/uploads/default.jpg
+!static/uploads/default_profile.jpg
